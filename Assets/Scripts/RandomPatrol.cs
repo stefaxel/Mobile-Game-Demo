@@ -9,9 +9,13 @@ public class RandomPatrol : MonoBehaviour
     [SerializeField] float maxX;
     [SerializeField] float minY;
     [SerializeField] float maxY;
-    [SerializeField] float speed;
+    private float speed;
+    [SerializeField] float minSpeed;
+    [SerializeField] float maxSpeed;
 
     Vector2 targetPosition;
+
+    [SerializeField] float timeToMaxDifficulty;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +28,7 @@ public class RandomPatrol : MonoBehaviour
     {
         if((Vector2)transform.position != targetPosition)
         {
+            speed = Mathf.Lerp(minSpeed, maxSpeed, GetDifficultyPercent());
             transform.position = Vector2.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
         }
         else
@@ -45,5 +50,10 @@ public class RandomPatrol : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+    }
+
+    float GetDifficultyPercent()
+    {
+        return Mathf.Clamp01(Time.timeSinceLevelLoad / timeToMaxDifficulty);
     }
 }
